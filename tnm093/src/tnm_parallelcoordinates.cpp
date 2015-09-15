@@ -59,6 +59,7 @@ TNMParallelCoordinates::AxisHandle::AxisHandlePosition TNMParallelCoordinates::A
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 TNMParallelCoordinates::TNMParallelCoordinates()
+
     : RenderProcessor()
     , _inport(Port::INPORT, "in.data")
 	, _outport(Port::OUTPORT, "out.image")
@@ -279,8 +280,37 @@ void TNMParallelCoordinates::handleMouseMove(tgt::MouseEvent* e)
 
 	// update the _brushingList with the indices of the lines that are not rendered anymore
 	_brushingList.clear();
+	  
+  const Data* data = _inport.getData();
+  float y_pos;
+  bool drawLine;
+  for(int i=0; i < data->data.size();i++)
+    {       
+      for( int k = 0; k < data->valueNames.size(); k++)		//Kollar så att en hel linje (med 6 variabler) kan ritas ut
+      {
+	  y_pos = 1.8*((data->data[i].dataValues[k] - data->minimumMaximumValues[k].first)/(data->minimumMaximumValues[k].second - data->minimumMaximumValues[k].first)) - 0.9;
+	  
+	  if(y_pos > _handles[k].position()[1] || y_pos < _handles[k+6].position()[1])
+	  {	  
+	    drawLine = false;
+	    break;
+	  }
+	  else
+	  {
+	    drawLine = true;
+	  }  
+      }
+	
+      if(!drawLine)
+      {
+	_brushingList.insert(i);
+	//LINFO(i);
+      }
+    }
 
+	
 	_brushingIndices.set(_brushingList);
+	
 
     // This re-renders the scene (which will call process in turn)
     invalidate();
@@ -312,7 +342,6 @@ void TNMParallelCoordinates::renderLines()
     }
 
     
-    // std::vector< <float> > drawingPoints;			// SKAPA EN FUCKING VECTOR DÄR ALLA PUNKTER MÅSTE OKEJAS FÖR ATT SEDAN FÅ RITAS UT!!    
     float y_pos;
     bool drawLine;
     for(int i=0; i < data->data.size();i++)
@@ -344,8 +373,10 @@ void TNMParallelCoordinates::renderLines()
 	    // drawingPoints[i][j] = y_pos;
 	      glVertex2f(x_pos, y_pos);
 	      x_pos += x_width;
+	     
 	}
 	glEnd();
+	
       }
     }
 }
@@ -404,7 +435,7 @@ void TNMParallelCoordinates::renderText() {
 			);
 		}
 		else {
-			float t = ((handle.position().y + 1) TNMParallelCoordinates/ 2.f);
+			float t = ((handle.position().y + 1) / 2.f);
 			str << t * (data->minimumMaximumValues[i/2].second - data->minimumMaximumValues[i/2].first) + data->minimumMaximumValues[i/2].first;
 			_font.get()->render(
 				tgt::vec3(
