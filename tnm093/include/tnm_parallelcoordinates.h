@@ -98,6 +98,8 @@ protected:
 	// Render the handles of the parallel coordinates axes with picking information
 	// included in the color
     void renderHandlesPicking();
+    
+    //void drawShitLine();
 
 	// The callback method that gets called when a mouse button was clicked on the rendering
     void handleMouseClick(tgt::MouseEvent* e);

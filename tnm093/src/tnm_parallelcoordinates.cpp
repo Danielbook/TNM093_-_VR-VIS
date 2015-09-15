@@ -340,8 +340,52 @@ void TNMParallelCoordinates::renderLines()
       x_pos += x_width;
       glEnd();
     }
-
-    
+ 
+    float y_pos;
+    bool drawLine;
+    for(int i=0; i < data->data.size();i++)
+    { 
+      float x_pos = -0.9f;
+      glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+       // Implement your line drawing
+      const Data* data = _inport.getData();
+      for( int k = 0; k < data->valueNames.size(); k++)		//Kollar så att en hel linje (med 6 variabler) kan ritas ut
+      {
+	  y_pos = 1.8*((data->data[i].dataValues[k] - data->minimumMaximumValues[k].first)/(data->minimumMaximumValues[k].second - data->minimumMaximumValues[k].first)) - 0.9;
+	  
+	  if(y_pos > _handles[k].position()[1] || y_pos < _handles[k+6].position()[1])
+	  {	  
+	    drawLine = false;
+	    break;
+	  }
+	  else
+	  {
+	    drawLine = true;
+	  }  
+      }
+      
+      if(drawLine)
+      {
+	glBegin(GL_LINE_STRIP);
+	for(int j=0; j < data->valueNames.size(); j++)
+	{
+	    y_pos = 1.8*((data->data[i].dataValues[j] - data->minimumMaximumValues[j].first)/(data->minimumMaximumValues[j].second - data->minimumMaximumValues[j].first)) - 0.9;
+	    // drawingPoints[i][j] = y_pos;
+	      glVertex2f(x_pos, y_pos);
+	      x_pos += x_width;
+	     
+	}
+	glEnd();
+	
+      }
+    }
+}
+/*
+void TNMParallelCoordinates::drawShitLine()
+{
+   // Implement your line drawing
+      const Data* data = _inport.getData();
+      
     float y_pos;
     bool drawLine;
     for(int i=0; i < data->data.size();i++)
@@ -380,11 +424,18 @@ void TNMParallelCoordinates::renderLines()
       }
     }
 }
+
+*/
 void TNMParallelCoordinates::renderLinesPicking() {
 	// Use the same code to render lines (without duplicating it), but think of a way to encode the
 	// voxel identifier into the color. The red color channel is already occupied, so you have 3
 	// channels with 32-bit each at your disposal (green, blue, alpha)
-
+  
+  	// Mapping the integer index to a float value between 1/255 and 1
+	//const float color = (_index + 1) / 255.f;
+	// The picking information is rendered only in the green channel
+	//renderInternal(tgt::vec3(0.f, color , 0.f));
+  
 }
 
 void TNMParallelCoordinates::renderText() {
