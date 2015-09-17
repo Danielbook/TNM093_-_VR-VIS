@@ -355,13 +355,11 @@ void TNMParallelCoordinates::renderLines()
     
     float y_pos;
     bool drawLine;
+    float p;
     for(int i=0; i < data->data.size();i++)
     { 
       float x_pos = -0.9f;
-      if( _linkingList.count(i) != 0 )
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-      else
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+      
       
       for( int k = 0; k < data->valueNames.size(); k++)		//Kollar så att en hel linje (med 6 variabler) kan ritas ut
       {
@@ -383,6 +381,14 @@ void TNMParallelCoordinates::renderLines()
 	glBegin(GL_LINE_STRIP);
 	for(int j=0; j < data->valueNames.size(); j++)
 	{
+	  
+	   p = ((data->data[i].dataValues[_colorMethod.getValue()] - data->minimumMaximumValues[_colorMethod.getValue()].first)/(data->minimumMaximumValues[_colorMethod.getValue()].second - data->minimumMaximumValues[_colorMethod.getValue()].first));
+
+	  if( _linkingList.count(i) != 0 )
+	    glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	  else
+	    glColor4f(p, 0.0f, 0.0f, 1.0f);
+	  
 	    y_pos = 1.8*((data->data[i].dataValues[j] - data->minimumMaximumValues[j].first)/(data->minimumMaximumValues[j].second - data->minimumMaximumValues[j].first)) - 0.9;
 	    
 	    // drawingPoints[i][j] = y_pos;

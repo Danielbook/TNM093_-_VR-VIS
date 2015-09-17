@@ -5,6 +5,13 @@
             <VolumeHandles />
         </VolumeContainer>
         <ProcessorNetwork version="11">
+            <MetaData>
+                <MetaItem name="ProcessorSelection" type="SelectionMetaData::Processor">
+                    <values>
+                        <item type="TNMParallelCoordinates" ref="ref2" />
+                    </values>
+                </MetaItem>
+            </MetaData>
             <Processors>
                 <Processor type="TNMCSVLoader" name="TNMCSVLoader" id="ref0">
                     <MetaData>
@@ -22,12 +29,13 @@
                     </MetaData>
                     <Properties>
                         <Property name="brushingIndices" id="ref7" />
-                        <Property name="colorMethod" guiName="Coloing Method" value="" />
+                        <Property name="colorMethod" guiName="Coloing Method" value="0" />
                         <Property name="font" fontType="&lt;unknown&gt;" fontSize="1" fontName="" textAlignment="&lt;unknown&gt;" verticalTextAlignment="&lt;unknown&gt;" lineWidth="1" />
                         <Property name="linkingIndices" id="ref5" />
                         <Property name="mouse.click" lod="1" enabled="true" mouseAction="6" mouseButtons="1" keyCode="0" modifier="0" shareEvents="false" />
                         <Property name="mouse.move" lod="1" enabled="true" mouseAction="1" mouseButtons="1" keyCode="0" modifier="0" shareEvents="false" />
                         <Property name="mouse.release" lod="1" enabled="true" mouseAction="4" mouseButtons="1" keyCode="0" modifier="0" shareEvents="false" />
+                        <Property name="mouseright.click" lod="1" enabled="true" mouseAction="6" mouseButtons="4" keyCode="0" modifier="0" shareEvents="false" />
                     </Properties>
                     <InteractionHandlers />
                 </Processor>
@@ -37,17 +45,17 @@
                     </MetaData>
                     <Properties>
                         <Property name="brushingIndices" id="ref8" />
-                        <Property name="firstAxis" guiName="First Axis" value="" />
+                        <Property name="firstAxis" guiName="First Axis" value="0" />
                         <Property name="linkingIndices" id="ref6" />
                         <Property name="pointSize" value="4" />
-                        <Property name="secondAxis" guiName="Second Axis" value="" />
+                        <Property name="secondAxis" guiName="Second Axis" value="0" />
                     </Properties>
                     <InteractionHandlers />
                 </Processor>
                 <Processor type="Canvas" name="Canvas" id="ref4">
                     <MetaData>
                         <MetaItem name="ProcessorGraphicsItem" type="PositionMetaData" x="-516" y="-313" />
-                        <MetaItem name="ProcessorWidget" type="WindowStateMetaData" visible="false" x="0" y="292" width="750" height="748" />
+                        <MetaItem name="ProcessorWidget" type="WindowStateMetaData" visible="false" x="2" y="289" width="750" height="748" />
                     </MetaData>
                     <Properties>
                         <Property name="canvasSize">
@@ -60,7 +68,7 @@
                 <Processor type="Canvas" name="Canvas 2" id="ref3">
                     <MetaData>
                         <MetaItem name="ProcessorGraphicsItem" type="PositionMetaData" x="-368" y="-312" />
-                        <MetaItem name="ProcessorWidget" type="WindowStateMetaData" visible="false" x="1038" y="330" width="750" height="750" />
+                        <MetaItem name="ProcessorWidget" type="WindowStateMetaData" visible="false" x="925" y="138" width="750" height="750" />
                     </MetaData>
                     <Properties>
                         <Property name="canvasSize">
