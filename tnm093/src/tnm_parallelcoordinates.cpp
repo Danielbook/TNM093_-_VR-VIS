@@ -91,6 +91,12 @@ TNMParallelCoordinates::TNMParallelCoordinates()
         this, &TNMParallelCoordinates::handleMouseClick,
         tgt::MouseEvent::MOUSE_BUTTON_LEFT, tgt::MouseEvent::CLICK, tgt::Event::MODIFIER_NONE);
     addEventProperty(_mouseClickEvent);
+    
+    _mouseClickEventRight = new EventProperty<TNMParallelCoordinates>(
+        "mouseright.click", "Mouse Right Click",
+        this, &TNMParallelCoordinates::handleMouseClickRight,
+        tgt::MouseEvent::MOUSE_BUTTON_RIGHT, tgt::MouseEvent::CLICK, tgt::Event::MODIFIER_NONE);
+    addEventProperty(_mouseClickEventRight);
 
     _mouseMoveEvent = new EventProperty<TNMParallelCoordinates>(
         "mouse.move", "Mouse Move",
@@ -125,6 +131,7 @@ TNMParallelCoordinates::TNMParallelCoordinates()
 
 TNMParallelCoordinates::~TNMParallelCoordinates() {
     delete _mouseClickEvent;
+    delete _mouseClickEventRight;
     delete _mouseMoveEvent;
 }
 
@@ -243,6 +250,13 @@ void TNMParallelCoordinates::handleMouseClick(tgt::MouseEvent* e) {
 	// Make the list of selected indices available to the Scatterplot
 	_linkingIndices.set(_linkingList);
 }
+
+void TNMParallelCoordinates::handleMouseClickRight(tgt::MouseEvent* e) {
+
+    _linkingList.clear();
+    
+    _linkingIndices.set(_linkingList);
+}
 //---------------------------------------------std::vector-------------------------------------------------------------------------------------------------------------------
 
 void TNMParallelCoordinates::handleMouseMove(tgt::MouseEvent* e) 
@@ -344,7 +358,10 @@ void TNMParallelCoordinates::renderLines()
     for(int i=0; i < data->data.size();i++)
     { 
       float x_pos = -0.9f;
-      glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+      if( _linkingList.count(i) != 0 )
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+      else
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
       
       for( int k = 0; k < data->valueNames.size(); k++)		//Kollar så att en hel linje (med 6 variabler) kan ritas ut
       {
@@ -367,6 +384,7 @@ void TNMParallelCoordinates::renderLines()
 	for(int j=0; j < data->valueNames.size(); j++)
 	{
 	    y_pos = 1.8*((data->data[i].dataValues[j] - data->minimumMaximumValues[j].first)/(data->minimumMaximumValues[j].second - data->minimumMaximumValues[j].first)) - 0.9;
+	    
 	    // drawingPoints[i][j] = y_pos;
 	      glVertex2f(x_pos, y_pos);
 	      x_pos += x_width;

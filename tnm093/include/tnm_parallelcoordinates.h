@@ -102,6 +102,9 @@ protected:
 	// The callback method that gets called when a mouse button was clicked on the rendering
     void handleMouseClick(tgt::MouseEvent* e);
 
+    
+    void handleMouseClickRight(tgt::MouseEvent* e);
+    
 	// The callback method that gets called when the mouse is moved across the rendering
     void handleMouseMove(tgt::MouseEvent* e);
 
@@ -121,6 +124,8 @@ private:
 
 	// The event that registers the click event
     EventProperty<TNMParallelCoordinates>* _mouseClickEvent;
+    
+    EventProperty<TNMParallelCoordinates>* _mouseClickEventRight;
 	// The event that registers the move event
     EventProperty<TNMParallelCoordinates>* _mouseMoveEvent;
 	// The event that registeres the release event
