@@ -44,7 +44,7 @@ public:
 
 		// Renders the handle at the current position using the encoded picking color
 		void renderPicking() const;
-
+		
 		// These are used internally in order to reuse the VBO and Shaders
 		void setVertexBufferObjectAndShader(GLuint vbo, tgt::Shader* shader);
 
@@ -98,9 +98,7 @@ protected:
 	// Render the handles of the parallel coordinates axes with picking information
 	// included in the color
     void renderHandlesPicking();
-    
-    //void drawShitLine();
-
+        
 	// The callback method that gets called when a mouse button was clicked on the rendering
     void handleMouseClick(tgt::MouseEvent* e);
 

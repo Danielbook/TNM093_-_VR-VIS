@@ -33,6 +33,8 @@ void TNMParallelCoordinates::AxisHandle::renderPicking() const {
 	renderInternal(tgt::vec3(color, 0.f, 0.f));
 }
 
+
+
 void TNMParallelCoordinates::AxisHandle::setVertexBufferObjectAndShader(GLuint vbo, tgt::Shader* shader) {
 	_vbo = vbo;
 	_shader = shader;
@@ -59,7 +61,6 @@ TNMParallelCoordinates::AxisHandle::AxisHandlePosition TNMParallelCoordinates::A
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------
 TNMParallelCoordinates::TNMParallelCoordinates()
-
     : RenderProcessor()
     , _inport(Port::INPORT, "in.data")
 	, _outport(Port::OUTPORT, "out.image")
@@ -76,7 +77,11 @@ TNMParallelCoordinates::TNMParallelCoordinates()
     addPrivateRenderPort(_privatePort);
 
 	addProperty(_font);
-	addProperty(_colorMethod);
+	addProperty(_colorMethod);	//
+    // Create AxisHandles here with a unique id
+    // _handles.push_back(AxisHandle(AxisHandle::AxisHandlePositionTop, 0, /* fix startposition */));
+    // ...
+	//
 
 	addProperty(_brushingIndices);
 	addProperty(_linkingIndices);
@@ -223,10 +228,10 @@ void TNMParallelCoordinates::handleMouseClick(tgt::MouseEvent* e) {
 	_pickedHandle = handleId;
 
 
-	int lineId = -1;
 	// Derive the id of the line that was clicked based on the color scheme that you devised in the
 	// renderLinesPicking method
 
+	int lineId = static_cast<int>(pickingTexture->texelAsFloat(screenCoords).g * 400 - 1);
 
 	LINFOC("Picking", "Picked line index: " << lineId);
 	if (lineId != -1)
@@ -252,7 +257,11 @@ void TNMParallelCoordinates::handleMouseMove(tgt::MouseEvent* e)
 	{
 	 if( _pickedHandle < 6) // UPPER HANDLES
 	 {
-	  float opositeHandle = _pickedHandle + 6;
+	  float opositeHandle = _pickedHandle + 6;	//
+    // Create AxisHandles here with a unique id
+    // _handles.push_back(AxisHandle(AxisHandle::AxisHandlePositionTop, 0, /* fix startposition */));
+    // ...
+	//
 	    if(normalizedDeviceCoordinates[1] > _handles[opositeHandle].position()[1] && normalizedDeviceCoordinates[1] <= 0.9f)
 	    {
 	      _handles[_pickedHandle].setPosition(tgt::vec2(_handles[_pickedHandle].position()[0], normalizedDeviceCoordinates[1]));
@@ -280,37 +289,25 @@ void TNMParallelCoordinates::handleMouseMove(tgt::MouseEvent* e)
 
 	// update the _brushingList with the indices of the lines that are not rendered anymore
 	_brushingList.clear();
-	  
-  const Data* data = _inport.getData();
-  float y_pos;
-  bool drawLine;
-  for(int i=0; i < data->data.size();i++)
-    {       
+	
+    const Data* data = _inport.getData();
+    float y_pos;
+    bool drawLine;
+    for(int i=0; i < data->data.size();i++)
+    { 
       for( int k = 0; k < data->valueNames.size(); k++)		//Kollar så att en hel linje (med 6 variabler) kan ritas ut
       {
 	  y_pos = 1.8*((data->data[i].dataValues[k] - data->minimumMaximumValues[k].first)/(data->minimumMaximumValues[k].second - data->minimumMaximumValues[k].first)) - 0.9;
 	  
 	  if(y_pos > _handles[k].position()[1] || y_pos < _handles[k+6].position()[1])
 	  {	  
-	    drawLine = false;
+	    _brushingList.insert(i);
 	    break;
 	  }
-	  else
-	  {
-	    drawLine = true;
-	  }  
       }
-	
-      if(!drawLine)
-      {
-	_brushingList.insert(i);
-	//LINFO(i);
-      }
-    }
-
-	
-	_brushingIndices.set(_brushingList);
-	
+     }
+      
+      _brushingIndices.set(_brushingList);
 
     // This re-renders the scene (which will call process in turn)
     invalidate();
@@ -331,7 +328,7 @@ void TNMParallelCoordinates::renderLines()
     
     //LINFO(data->minimumMaximumValues[0].second);
     float x_pos = -0.9f;
-    for(int k=0; k < data->valueNames.size(); k++)
+    for(int k=0; k < data->valueNames.size();k++)
     {  
       glBegin(GL_LINE_STRIP);
       glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -340,52 +337,8 @@ void TNMParallelCoordinates::renderLines()
       x_pos += x_width;
       glEnd();
     }
- 
-    float y_pos;
-    bool drawLine;
-    for(int i=0; i < data->data.size();i++)
-    { 
-      float x_pos = -0.9f;
-      glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-       // Implement your line drawing
-      const Data* data = _inport.getData();
-      for( int k = 0; k < data->valueNames.size(); k++)		//Kollar så att en hel linje (med 6 variabler) kan ritas ut
-      {
-	  y_pos = 1.8*((data->data[i].dataValues[k] - data->minimumMaximumValues[k].first)/(data->minimumMaximumValues[k].second - data->minimumMaximumValues[k].first)) - 0.9;
-	  
-	  if(y_pos > _handles[k].position()[1] || y_pos < _handles[k+6].position()[1])
-	  {	  
-	    drawLine = false;
-	    break;
-	  }
-	  else
-	  {
-	    drawLine = true;
-	  }  
-      }
-      
-      if(drawLine)
-      {
-	glBegin(GL_LINE_STRIP);
-	for(int j=0; j < data->valueNames.size(); j++)
-	{
-	    y_pos = 1.8*((data->data[i].dataValues[j] - data->minimumMaximumValues[j].first)/(data->minimumMaximumValues[j].second - data->minimumMaximumValues[j].first)) - 0.9;
-	    // drawingPoints[i][j] = y_pos;
-	      glVertex2f(x_pos, y_pos);
-	      x_pos += x_width;
-	     
-	}
-	glEnd();
-	
-      }
-    }
-}
-/*
-void TNMParallelCoordinates::drawShitLine()
-{
-   // Implement your line drawing
-      const Data* data = _inport.getData();
-      
+
+    
     float y_pos;
     bool drawLine;
     for(int i=0; i < data->data.size();i++)
@@ -417,25 +370,56 @@ void TNMParallelCoordinates::drawShitLine()
 	    // drawingPoints[i][j] = y_pos;
 	      glVertex2f(x_pos, y_pos);
 	      x_pos += x_width;
-	     
 	}
 	glEnd();
-	
       }
     }
 }
 
-*/
 void TNMParallelCoordinates::renderLinesPicking() {
 	// Use the same code to render lines (without duplicating it), but think of a way to encode the
 	// voxel identifier into the color. The red color channel is already occupied, so you have 3
 	// channels with 32-bit each at your disposal (green, blue, alpha)
-  
-  	// Mapping the integer index to a float value between 1/255 and 1
-	//const float color = (_index + 1) / 255.f;
-	// The picking information is rendered only in the green channel
-	//renderInternal(tgt::vec3(0.f, color , 0.f));
-  
+
+     const Data* data = _inport.getData();
+     float x_width = 1.8f / (NUM_DATA_VALUES - 1);
+    float y_pos;
+    bool drawLine;
+    
+    for(int i=0; i < data->data.size();i++)
+    { 
+      float x_pos = -0.9f;
+      glColor4f(0.0f, (i + 1.f)/400.0f , 0.0f, 1.0f);
+      
+      for( int k = 0; k < data->valueNames.size(); k++)		//Kollar så att en hel linje (med 6 variabler) kan ritas ut
+      {
+	  y_pos = 1.8*((data->data[i].dataValues[k] - data->minimumMaximumValues[k].first)/(data->minimumMaximumValues[k].second - data->minimumMaximumValues[k].first)) - 0.9;
+	  
+	  if(y_pos > _handles[k].position()[1] || y_pos < _handles[k+6].position()[1])
+	  {	  
+	    drawLine = false;
+	    break;
+	  }
+	  else
+	  {
+	    drawLine = true;
+	  }  
+      }
+      
+      if(drawLine)
+      {
+	glBegin(GL_LINE_STRIP);
+	for(int j=0; j < data->valueNames.size(); j++)
+	{
+	    y_pos = 1.8*((data->data[i].dataValues[j] - data->minimumMaximumValues[j].first)/(data->minimumMaximumValues[j].second - data->minimumMaximumValues[j].first)) - 0.9;
+	    // drawingPoints[i][j] = y_pos;
+	      glVertex2f(x_pos, y_pos);
+	      x_pos += x_width;
+	}
+	glEnd();
+      }
+    }
+
 }
 
 void TNMParallelCoordinates::renderText() {

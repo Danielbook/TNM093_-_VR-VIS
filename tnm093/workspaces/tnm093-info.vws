@@ -5,13 +5,6 @@
             <VolumeHandles />
         </VolumeContainer>
         <ProcessorNetwork version="11">
-            <MetaData>
-                <MetaItem name="ProcessorSelection" type="SelectionMetaData::Processor">
-                    <values>
-                        <item type="TNMCSVLoader" ref="ref0" />
-                    </values>
-                </MetaItem>
-            </MetaData>
             <Processors>
                 <Processor type="TNMCSVLoader" name="TNMCSVLoader" id="ref0">
                     <MetaData>
@@ -29,7 +22,7 @@
                     </MetaData>
                     <Properties>
                         <Property name="brushingIndices" id="ref7" />
-                        <Property name="colorMethod" guiName="Coloing Method" value="0" />
+                        <Property name="colorMethod" guiName="Coloing Method" value="" />
                         <Property name="font" fontType="&lt;unknown&gt;" fontSize="1" fontName="" textAlignment="&lt;unknown&gt;" verticalTextAlignment="&lt;unknown&gt;" lineWidth="1" />
                         <Property name="linkingIndices" id="ref5" />
                         <Property name="mouse.click" lod="1" enabled="true" mouseAction="6" mouseButtons="1" keyCode="0" modifier="0" shareEvents="false" />
@@ -44,10 +37,10 @@
                     </MetaData>
                     <Properties>
                         <Property name="brushingIndices" id="ref8" />
-                        <Property name="firstAxis" guiName="First Axis" value="0" />
+                        <Property name="firstAxis" guiName="First Axis" value="" />
                         <Property name="linkingIndices" id="ref6" />
                         <Property name="pointSize" value="4" />
-                        <Property name="secondAxis" guiName="Second Axis" value="0" />
+                        <Property name="secondAxis" guiName="Second Axis" value="" />
                     </Properties>
                     <InteractionHandlers />
                 </Processor>
