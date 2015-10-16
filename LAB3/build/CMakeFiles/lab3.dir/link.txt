@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++11     CMakeFiles/lab3.dir/main.cpp.o  -o ../lab3 -rdynamic -Wl,-Bstatic -lsgct -Wl,-Bdynamic -lGL -lX11 -lXrandr -lXinerama -lXi -lXxf86vm -lXcursor -lpthread 
