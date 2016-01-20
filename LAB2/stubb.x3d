@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Copyright 2013, Karljohan Lundin Palmerius
+
+This is a stubb for laborations on multi-modal display
+systems in the VR laboratory. It will disable the X3D
+navigation to allow for viewpoint calibration and tracking,
+and load libraries commonly used in the VR laboratory.
+
+-->
+<Group>
+  
+  <PythonScript url="urn:candy:python/CorrectViewpoint.py"/>
+  
+  <PythonScript url="urn:candy:python/AutoLoadSO.py"/>
+  
+  <PythonScript url="urn:candy:python/MFtoSFBool.py" DEF='MF'/>
+  <PythonScript url="urn:candy:python/MFtoSFBool.py" DEF='MF2'/>
+  
+  <PythonScript url="urn:candy:python/AutoLoadSO.py">
+    <MetadataString
+        name="library" value="vhtk" containerField="references"/>
+  </PythonScript>
+  
+  
+  <!-- Put your code here -->
+  <Viewpoint 
+    orientation="1 0 0 -0.197"
+    position="0 0.2 1"/>
+  
+  <Viewpoint 
+    orientation="0 1 0 -1.57"
+    position="-1 0.2 0"/>
+
+<SMViewpoint 
+    orientation="1 0 0 -0.197"
+    position="0 0.2 1"
+    screenLowerLeft="-0.52 -0.38 0" 
+    screenUpperRight="0.52 0.38 0"/>
+
+
+<TimeTrigger DEF='T' />
+<TimeTrigger DEF='T2' />
+<BooleanFilter DEF='B' />
+<BooleanFilter DEF='B2' />
+
+<VRSound intensity="0.3" DEF="SOUND1" spatialize="TRUE" >
+  <AudioClip DEF="AUDIO1" url="sound.wav" loop="FALSE"/>
+</VRSound> 
+
+<VRSound intensity="0.3" DEF="SOUND2" spatialize="TRUE" >
+  <ReverbSoundEffect DEF="eff" parametersPreset="CHAPEL"/>
+  <AudioClip DEF="AUDIO2" url="sound2.wav" loop="FALSE"/>
+</VRSound>
+
+
+    <!-- Seat -->
+    <Transform translation="0 0 0">
+      <Shape>
+	<Appearance>
+	  <Material 
+	    diffuseColor="0.9 0.9 0.2"
+	    specularColor="0.2 0.6 0"/>
+
+	  <SmoothSurface useRelativeValues="false" stiffness="500" damping="5" />
+	  
+	</Appearance>
+	<Box size="0.15 0.01 0.15" DEF="SEAT"/>
+	<ROUTE fromNode='SEAT' fromField='isTouched' toNode='MF' toField='value' />
+	<ROUTE fromNode='MF' fromField='value' toNode='B' toField='set_boolean' />
+	<ROUTE fromNode='B' fromField='inputTrue' toNode='T' toField='set_boolean' />
+	<ROUTE fromNode='T' fromField='triggerTime' toNode='AUDIO2' toField='startTime' />
+      </Shape>
+    </Transform>
+    <!-- Legs -->
+    <Transform DEF="LEG1"
+	      translation="0.06 -0.075 0.06">
+      <Shape DEF="Legs">
+	<Appearance>
+	  <Material diffuseColor="0.1 0.1 0.5"/>
+	  <FrictionalSurface stiffness="1" damping="0" staticFriction="0.8" dynamicFriction="0.2" />
+	</Appearance>
+	<Cylinder radius="0.007" height="0.15"/>
+      </Shape>
+    </Transform>  
+    
+    <Transform DEF="LEG2"
+	      translation="-0.06 -0.075 -0.06">
+      <Shape USE="Legs"/>
+    </Transform>  
+
+    <Transform DEF="LEG3"
+	      translation="0.06 -0.075 -0.06">
+      <Shape USE="Legs"/>
+    </Transform>  
+    
+    <Transform DEF="LEG4"
+	      translation="-0.06 -0.075 0.06">
+      <Shape USE="Legs"/>
+    </Transform>  
+    <!--Back-->
+    <Transform translation="0 0.1 -0.07">
+      <Shape>
+	<Appearance>
+	  <Material diffuseColor="0.5 0.7 0.2"/>
+	  <FrictionalSurface stiffness="1" damping="0" staticFriction="0.8" dynamicFriction="0.2"  />
+	  </Appearance>
+	<Box size="0.15 0.2 0.01" DEF="BACK"/>
+	<ROUTE fromNode='BACK' fromField='isTouched' toNode='MF2' toField='value' />
+	<ROUTE fromNode='MF2' fromField='value' toNode='B2' toField='set_boolean' />
+	<ROUTE fromNode='B2' fromField='inputTrue' toNode='T2' toField='set_boolean' />
+	<ROUTE fromNode='T2' fromField='triggerTime' toNode='AUDIO1' toField='startTime' />
+      </Shape>
+    </Transform>
+
+
+    
+    
+</Group>

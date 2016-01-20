@@ -1,0 +1,3 @@
+C:\VRSystem\Desktop-folder
+
+kör openenv-H3D-2.2-trunk
